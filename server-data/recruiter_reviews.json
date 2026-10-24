@@ -1,0 +1,25 @@
+[
+  {
+    "id": "rev-1792063600679-ih6c",
+    "studentId": "22AIDS014",
+    "studentRollNumber": "22AIDS014",
+    "studentName": "S. Lalith Kumar",
+    "department": "AI & DS",
+    "batch": "2022-2026",
+    "reviewerId": "officer-raman",
+    "reviewerName": "Dr. S. K. Raman",
+    "reviewerRole": "PLACEMENT_OFFICER",
+    "driveId": "drive-zoho-sde",
+    "companyName": "Zoho Corporation",
+    "status": "Shortlisted",
+    "scorecard": {
+      "technicalEvidence": 5,
+      "projectQuality": 5,
+      "readabilityFormat": 5,
+      "recruiterRecommendation": 5
+    },
+    "writtenJustification": "Exceptional single-column ATS resume created via Overleaf with verified public GitHub repositories and strong full-stack ML project metrics. Highly recommended for Zoho SDE round 1.",
+    "recruiterNotes": "Scheduled for initial round screening.",
+    "updatedAt": "2026-10-15T11:26:40.679Z"
+  }
+]

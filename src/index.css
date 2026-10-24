@@ -1,0 +1,1051 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *):not(#apex-main-canvas, #apex-main-canvas *));
+
+
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+    -webkit-overflow-scrolling: touch;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #root {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: clip;
+  }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  /* Prevent iOS Safari from zooming into inputs when focused */
+  @media (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+}
+
+/* Adobe MAX Chromatic Glow & Spectrum Utilities */
+.max-gradient-text {
+  background: linear-gradient(135deg, #FF007A 0%, #7928CA 35%, #00F0FF 70%, #FFD600 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.max-gradient-border {
+  position: relative;
+  background-clip: padding-box;
+}
+
+.max-gradient-border::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 0, 122, 0.4), rgba(121, 40, 202, 0.4), rgba(0, 240, 255, 0.4));
+}
+
+.max-button-gradient {
+  background: linear-gradient(135deg, #FF007A 0%, #7928CA 50%, #0070F3 100%);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.max-button-gradient:hover {
+  background: linear-gradient(135deg, #FF1A8C 0%, #8A3FFC 50%, #0080FF 100%);
+  box-shadow: 0 0 25px rgba(255, 0, 122, 0.45);
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  body {
+    background: white !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  [id^="resume-printable-area"], [id^="resume-printable-area"] * {
+    visibility: visible;
+  }
+  [id^="resume-printable-area"] {
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    border: none !important;
+    page-break-after: always;
+    break-after: page;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.7);
+}
+
+/*
+=========================================================
+ HOLOGRAPHIC TILT — Login V2 (A + B mix)
+ Collapsed pill (LOGIN centered) -> expand on hover.
+ Soft aurora (A) + gentle cursor tilt + masked rays (B-lite).
+ Multi-theme via --c1/--c2/--c3 variables.
+=========================================================
+*/
+
+@property --a {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --b {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+:root {
+  --radius: 24px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --speed: 0.6s;
+}
+
+/* =================== THEMES =================== */
+.theme-neon    { --c1:#ff2770; --c2:#45f3ff; --c3:#8a5cff; --ink:#110f18; }
+.theme-aurora  { --c1:#8a5cff; --c2:#3ad6ff; --c3:#ff6ad5; --ink:#0f1020; }
+.theme-sunset  { --c1:#ff6a3d; --c2:#ffd166; --c3:#ff3d77; --ink:#1a0f12; }
+.theme-emerald { --c1:#22e3a3; --c2:#7dff9b; --c3:#33c0ff; --ink:#08140f; }
+.theme-royal   { --c1:#c9a227; --c2:#9b5cff; --c3:#ffd479; --ink:#140f1c; }
+.theme-mono    { --c1:#e8e8ef; --c2:#9aa3b2; --c3:#c7cdd9; --ink:#0e0f13; }
+
+/* Stage */
+.stage { perspective: 1500px; perspective-origin: 50% 45%; }
+
+.holo-card {
+  --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 50%;
+  position: relative;
+  width: min(450px, calc(100vw - 1.5rem));
+  max-width: 100%;
+  border-radius: var(--radius);
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.3s var(--ease);
+  outline: none;
+}
+
+.holo-card .layer { position: absolute; inset: 0; border-radius: var(--radius); }
+
+/* ---- A: soft drifting aurora ---- */
+.holo-card .aurora {
+  transform: translateZ(-45px);
+  overflow: hidden;
+  filter: blur(36px) saturate(135%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.holo-card .blob { position: absolute; width: 65%; height: 80%; border-radius: 50%; mix-blend-mode: screen; will-change: transform; }
+.holo-card .blob-a { background: radial-gradient(circle, var(--c1) 0%, transparent 62%); top: -10%; left: 0%;  animation: drift-a 11s ease-in-out infinite; }
+.holo-card .blob-b { background: radial-gradient(circle, var(--c2) 0%, transparent 62%); top: 10%;  left: 45%; animation: drift-b 13s ease-in-out infinite; }
+.holo-card .blob-c { background: radial-gradient(circle, var(--c3) 0%, transparent 62%); top: 35%;  left: 18%; animation: drift-c 15s ease-in-out infinite; }
+@keyframes drift-a { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(30%,25%) scale(1.2)} }
+@keyframes drift-b { 0%,100%{transform:translate(0,0) scale(1.1)} 50%{transform:translate(-28%,20%) scale(0.9)} }
+@keyframes drift-c { 0%,100%{transform:translate(0,0) scale(0.95)} 50%{transform:translate(25%,-22%) scale(1.15)} }
+
+/* ---- B-lite: faint rays, masked so the CENTER stays calm ---- */
+.holo-card .rings {
+  transform: translateZ(-50px);
+  background:
+    repeating-conic-gradient(from var(--a),                   var(--c1) 0% 3%, transparent 3% 25%),
+    repeating-conic-gradient(from calc(var(--a) * -1 + 28deg), var(--c2) 0% 3%, transparent 3% 25%);
+  filter: blur(7px);
+  opacity: 0.18;
+  animation: spin 14s linear infinite;
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 28%, #000 78%);
+          mask: radial-gradient(circle at 50% 50%, transparent 28%, #000 78%);
+  pointer-events: none;
+}
+@keyframes spin { to { --a: 360deg; } }
+
+/* ---- glass panel ---- */
+.holo-card .panel {
+  transform: translateZ(0);
+  background: rgba(14, 13, 20, 0.90);
+  backdrop-filter: blur(16px) saturate(125%);
+  -webkit-backdrop-filter: blur(16px) saturate(125%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -24px 50px rgba(0, 0, 0, 0.5),
+    0 40px 80px rgba(0, 0, 0, 0.65);
+}
+
+/* ---- animated border beam (traces the rounded edge) ---- */
+.holo-card .beam {
+  transform: translateZ(2px);
+  padding: 1.6px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--b),
+    transparent 0deg,
+    var(--c2) 50deg,
+    var(--c1) 110deg,
+    transparent 200deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--c2) 60%, transparent));
+  animation: spin-beam 4s linear infinite;
+  z-index: 3;
+}
+@keyframes spin-beam { to { --b: 360deg; } }
+
+/* ---- holographic sheen ---- */
+.holo-card .sheen {
+  transform: translateZ(1px);
+  pointer-events: none;
+  background:
+    radial-gradient(380px circle at var(--mx) var(--my),
+      rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 35%, transparent 60%);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+
+/* ---- reveal clip plane ---- */
+.holo-card .reveal {
+  position: relative;
+  transform: translateZ(30px);
+  z-index: 4;
+}
+
+/* =================== TITLE =================== */
+.holo-card .title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.holo-card .title i {
+  color: var(--c1);
+  font-size: 1.15rem;
+  text-shadow: 0 0 8px var(--c1), 0 0 24px color-mix(in srgb, var(--c1) 70%, transparent);
+}
+.holo-card .title .heart { animation: beat 1.2s ease-in-out infinite; }
+@keyframes beat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
+
+/* fields */
+.holo-card .field { position: relative; display: flex; align-items: center; }
+.holo-card .field-icon {
+  position: absolute;
+  left: 16px;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.95rem;
+  pointer-events: none;
+  transition: color 0.3s var(--ease);
+}
+.holo-card .field input {
+  width: 100%;
+  padding: 14px 44px;
+  font-size: 0.92rem;
+  color: #fff;
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(255,255,255,0.14);
+  border-radius: 14px;
+  outline: none;
+  transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), background 0.3s var(--ease);
+}
+.holo-card .field input:focus {
+  border-color: var(--c2);
+  background: color-mix(in srgb, var(--c2) 7%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c2) 18%, transparent),
+              0 0 24px color-mix(in srgb, var(--c2) 28%, transparent);
+}
+.holo-card .field input:focus ~ .field-icon { color: var(--c2); }
+
+/* floating label */
+.holo-card .field label {
+  position: absolute; left: 44px; top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.55);
+  font-size: 0.9rem;
+  pointer-events: none;
+  transition: all 0.25s var(--ease);
+}
+.holo-card .field input:focus + label,
+.holo-card .field input:not(:placeholder-shown) + label {
+  top: 0; left: 16px;
+  transform: translateY(-50%) scale(0.82);
+  padding: 0 6px;
+  color: var(--c2);
+  background: var(--ink);
+  border-radius: 6px;
+}
+
+/* password toggle */
+.holo-card .toggle-pw {
+  position: absolute; right: 10px;
+  display: grid; place-items: center;
+  width: 32px; height: 32px;
+  border: none; border-radius: 8px;
+  background: transparent; color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  transition: color 0.3s var(--ease), background 0.3s var(--ease);
+}
+.holo-card .toggle-pw:hover { color: var(--c2); background: rgba(255,255,255,0.06); }
+
+/* submit */
+.holo-card .submit {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin-top: 4px; padding: 13px;
+  font-size: 0.95rem; font-weight: 600;
+  color: #0a0a0f; border: none; border-radius: 14px; cursor: pointer;
+  background: linear-gradient(110deg, var(--c2), var(--c1));
+  background-size: 200% 100%; background-position: 0% 50%;
+  transition: background-position 0.5s var(--ease), box-shadow 0.4s var(--ease), transform 0.15s var(--ease);
+}
+.holo-card .submit i { transition: transform 0.4s var(--ease); }
+.holo-card .submit:hover {
+  background-position: 100% 50%;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--c2) 45%, transparent),
+              0 0 40px color-mix(in srgb, var(--c1) 35%, transparent);
+}
+.holo-card .submit:hover i { transform: translateX(5px); }
+.holo-card .submit:active { transform: scale(0.98); }
+
+/* links */
+.holo-card .group { display: flex; justify-content: space-between; font-size: 0.82rem; }
+.holo-card .group a, .holo-card .group button { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.3s var(--ease); }
+.holo-card .group a:hover, .holo-card .group button:hover { color: #fff; }
+.holo-card .group .accent { color: var(--c1); font-weight: 600; }
+.holo-card .group .accent:hover { text-shadow: 0 0 12px color-mix(in srgb, var(--c1) 70%, transparent); }
+
+/* theme switcher */
+.holo-themes {
+  display: flex; gap: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  z-index: 20;
+}
+.holo-themes button {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.25);
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--sw1), var(--sw2));
+  transition: transform 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.holo-themes button:hover { transform: scale(1.15); }
+.holo-themes button.active { border-color: #fff; transform: scale(1.2); box-shadow: 0 0 12px rgba(255,255,255,0.4); }
+
+/* =================== reduced motion =================== */
+@media (prefers-reduced-motion: reduce) {
+  .holo-card .rings, .holo-card .blob, .holo-card .beam, .holo-card .title .heart { animation: none; }
+  .holo-card { transform: none !important; }
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > header:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(2) {
+  display: none;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > aside:nth-of-type(1) > div:nth-of-type(1) > nav:nth-of-type(1) > button:nth-of-type(8) {
+  display: none;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(2) > a:nth-of-type(1) {
+  display: none;
+}
+
+
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(1) > button:nth-of-type(6) {
+  display: none;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > header:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(3) {
+  display: none;
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) {
+  display: none !important;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(3) {
+  display: none !important;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(7) > div:nth-of-type(3) {
+  display: none !important;
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) {
+  display: none !important;
+}
+
+/* =========================================================
+   APEX Animated Brand Logo Badge
+   Continuous flowing gradient border, specular 3D depth,
+   light sweep, living ambient aura, and prefers-reduced-motion
+   ========================================================= */
+@keyframes apex-border-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-apex-border {
+  background-size: 300% 300%;
+  animation: apex-border-flow 4.5s ease infinite;
+}
+
+@keyframes apex-aura-pulse {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.03);
+  }
+}
+
+.apex-aura-pulse {
+  animation: apex-aura-pulse 3.2s ease-in-out infinite;
+}
+
+@keyframes apex-sweep {
+  0% {
+    transform: translateX(-160%) skewX(-25deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  28% {
+    transform: translateX(260%) skewX(-25deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(260%) skewX(-25deg);
+    opacity: 0;
+  }
+}
+
+.apex-sweep-light {
+  animation: apex-sweep 5.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+@keyframes apex-pulse-node {
+  0%, 100% {
+    r: 1.3;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 2px #00F0FF);
+  }
+  50% {
+    r: 1.8;
+    opacity: 1;
+    filter: drop-shadow(0 0 6px #00F0FF);
+  }
+}
+
+.apex-crown-node {
+  animation: apex-pulse-node 2.2s ease-in-out infinite;
+}
+
+@keyframes apex-trace-shimmer {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 4px rgba(0, 240, 255, 0.7));
+  }
+}
+
+.apex-motif-facet {
+  animation: apex-trace-shimmer 3s ease-in-out infinite;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .animate-apex-border,
+  .apex-aura-pulse,
+  .apex-sweep-light,
+  .apex-crown-node,
+  .apex-motif-facet,
+  .apex-logo-container {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+  .apex-sweep-light {
+    display: none !important;
+  }
+}
+
+/* =========================================================
+   APEX SUMMIT 2026 — CINEMATIC 3D LANDING SYSTEM
+   Scoped exclusively to .apex-summit-root inside LandingPage
+   ========================================================= */
+.apex-summit-root {
+  --summit-violet: #7C3AED;
+  --summit-magenta: #EC008C;
+  --summit-cyan: #06D6F2;
+  --summit-blue: #2563EB;
+  --summit-emerald: #10B981;
+  --summit-navy: #11152B;
+  --summit-lavender: #F5F3FF;
+  --summit-white: #FFFFFF;
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  color: #11152B;
+}
+
+/* Hero Architectural Stage & Subtle Circuit Grid */
+.apex-summit-hero-stage {
+  --px: 0px;
+  --py: 0px;
+  position: relative;
+  perspective: 1200px;
+  background:
+    radial-gradient(680px circle at 8% 12%, rgba(236, 0, 140, 0.09) 0%, rgba(124, 58, 237, 0.07) 42%, transparent 72%),
+    radial-gradient(640px circle at 92% 18%, rgba(6, 214, 242, 0.13) 0%, rgba(37, 99, 235, 0.08) 45%, transparent 74%),
+    radial-gradient(540px circle at 52% 95%, rgba(124, 58, 237, 0.07) 0%, transparent 70%),
+    linear-gradient(160deg, #FFFFFF 0%, #FAF8FF 48%, #F5F3FF 100%);
+  border: 1px solid rgba(124, 58, 237, 0.16);
+  box-shadow:
+    0 24px 60px -20px rgba(17, 21, 43, 0.08),
+    0 8px 24px -10px rgba(124, 58, 237, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.apex-summit-circuit-grid {
+  background-image:
+    linear-gradient(to right, rgba(124, 58, 237, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(37, 99, 235, 0.055) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 38%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 38%, #000 30%, transparent 85%);
+}
+
+/* Desktop Parallax Layers */
+.apex-parallax-back {
+  transform: translate3d(calc(var(--px, 0px) * -0.5), calc(var(--py, 0px) * -0.5), 0);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.apex-parallax-front {
+  transform: translate3d(calc(var(--px, 0px) * 0.85), calc(var(--py, 0px) * 0.85), 0);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* Occasional Hero Background Light Sweep */
+@keyframes apex-hero-light-sweep {
+  0%, 14% {
+    transform: translate3d(-135%, 0, 0) skewX(-22deg);
+    opacity: 0;
+  }
+  24% {
+    opacity: 0.75;
+  }
+  42% {
+    transform: translate3d(235%, 0, 0) skewX(-22deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(235%, 0, 0) skewX(-22deg);
+    opacity: 0;
+  }
+}
+
+.apex-hero-sweep-beam {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(6, 214, 242, 0.08) 32%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(236, 0, 140, 0.08) 68%,
+    transparent 100%
+  );
+  animation: apex-hero-light-sweep 9s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+/* Flowing Multicolor Gradient Heading */
+@keyframes apex-heading-spectrum {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.apex-summit-gradient-title {
+  background: linear-gradient(
+    115deg,
+    #EC008C 0%,
+    #7C3AED 30%,
+    #2563EB 60%,
+    #06D6F2 82%,
+    #EC008C 100%
+  );
+  background-size: 240% 240%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: apex-heading-spectrum 8s ease-in-out infinite;
+  filter: drop-shadow(0 10px 24px rgba(124, 58, 237, 0.16));
+}
+
+/* Event Badge Animated Gradient Border & Gentle Glow */
+.apex-summit-event-badge {
+  position: relative;
+  background: linear-gradient(125deg, #11152B 0%, #1E1B4B 100%);
+  box-shadow:
+    0 8px 22px -6px rgba(236, 0, 140, 0.32),
+    0 4px 12px -4px rgba(124, 58, 237, 0.28);
+}
+
+.apex-summit-event-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: linear-gradient(120deg, #EC008C, #7C3AED, #06D6F2, #2563EB, #EC008C);
+  background-size: 260% 260%;
+  animation: apex-heading-spectrum 5s linear infinite;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Primary CTA: Magenta -> Violet -> Electric Blue with Moving Highlight */
+.apex-summit-cta-primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(120deg, #EC008C 0%, #7C3AED 48%, #2563EB 100%);
+  background-size: 210% 210%;
+  background-position: 0% 50%;
+  box-shadow:
+    0 16px 34px -8px rgba(124, 58, 237, 0.46),
+    0 6px 16px -4px rgba(236, 0, 140, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32);
+  transition:
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    background-position 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apex-summit-cta-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 24%,
+    rgba(255, 255, 255, 0.34) 50%,
+    transparent 76%
+  );
+  transform: translate3d(-130%, 0, 0);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.apex-summit-cta-primary:hover {
+  background-position: 100% 50%;
+  transform: translate3d(0, -2.5px, 0);
+  box-shadow:
+    0 22px 42px -8px rgba(124, 58, 237, 0.55),
+    0 10px 22px -4px rgba(37, 99, 235, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.apex-summit-cta-primary:hover::after {
+  transform: translate3d(130%, 0, 0);
+}
+
+.apex-summit-cta-primary:active {
+  transform: translate3d(0, 0.5px, 0) scale(0.985);
+}
+
+/* Secondary 3D Midnight & Clean Surface Buttons */
+.apex-summit-btn-midnight {
+  background: linear-gradient(180deg, #191F3D 0%, #11152B 100%);
+  border: 1px solid rgba(124, 58, 237, 0.28);
+  box-shadow:
+    0 10px 24px -8px rgba(17, 21, 43, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.22s ease;
+}
+
+.apex-summit-btn-midnight:hover {
+  transform: translate3d(0, -2px, 0);
+  border-color: rgba(6, 214, 242, 0.55);
+  box-shadow:
+    0 16px 30px -8px rgba(17, 21, 43, 0.42),
+    0 0 18px -4px rgba(6, 214, 242, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.apex-summit-btn-midnight:active {
+  transform: translate3d(0, 0.5px, 0) scale(0.985);
+}
+
+.apex-summit-btn-lavender {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F5F3FF 100%);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  box-shadow:
+    0 8px 20px -8px rgba(17, 21, 43, 0.08),
+    inset 0 1px 0 #FFFFFF;
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.22s ease,
+    background 0.22s ease;
+}
+
+.apex-summit-btn-lavender:hover {
+  transform: translate3d(0, -2px, 0);
+  border-color: rgba(124, 58, 237, 0.42);
+  box-shadow:
+    0 14px 26px -10px rgba(124, 58, 237, 0.18),
+    inset 0 1px 0 #FFFFFF;
+}
+
+.apex-summit-btn-lavender:active {
+  transform: translate3d(0, 0.5px, 0) scale(0.985);
+}
+
+/* Interactive 3D Perspective Tilt Cards */
+.apex-summit-tilt-card {
+  --rx: 0deg;
+  --ry: 0deg;
+  --spot-x: 50%;
+  --spot-y: 50%;
+  --edge-c1: #7C3AED;
+  --edge-c2: #2563EB;
+  --edge-c3: #06D6F2;
+  position: relative;
+  background: linear-gradient(165deg, #FFFFFF 0%, #FFFFFF 62%, #F5F3FF 100%);
+  border: 1px solid rgba(17, 21, 43, 0.08);
+  box-shadow:
+    0 12px 32px -12px rgba(17, 21, 43, 0.08),
+    0 2px 6px -1px rgba(17, 21, 43, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform-style: preserve-3d;
+  transform: perspective(1050px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(0);
+  transition:
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.28s ease;
+  will-change: transform;
+}
+
+.apex-summit-tilt-card:hover {
+  border-color: transparent;
+  box-shadow:
+    0 24px 48px -14px rgba(17, 21, 43, 0.13),
+    0 10px 26px -10px color-mix(in srgb, var(--edge-c1) 24%, transparent),
+    inset 0 1px 0 #FFFFFF;
+}
+
+/* Animated Gradient Border Rim on Card Hover */
+.apex-summit-tilt-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: linear-gradient(130deg, var(--edge-c1), var(--edge-c2), var(--edge-c3), var(--edge-c1));
+  background-size: 240% 240%;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+  animation: apex-heading-spectrum 5s ease infinite;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.apex-summit-tilt-card:hover::before {
+  opacity: 1;
+}
+
+/* Cursor-Following Specular Spotlight Sheen */
+.apex-summit-tilt-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    360px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    color-mix(in srgb, var(--edge-c1) 10%, transparent) 0%,
+    color-mix(in srgb, var(--edge-c3) 6%, transparent) 38%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.apex-summit-tilt-card:hover::after {
+  opacity: 1;
+}
+
+.apex-card-accent-magenta {
+  --edge-c1: #EC008C;
+  --edge-c2: #7C3AED;
+  --edge-c3: #2563EB;
+}
+
+.apex-card-accent-cyan {
+  --edge-c1: #06D6F2;
+  --edge-c2: #2563EB;
+  --edge-c3: #7C3AED;
+}
+
+.apex-card-accent-violet {
+  --edge-c1: #7C3AED;
+  --edge-c2: #2563EB;
+  --edge-c3: #10B981;
+}
+
+.apex-card-accent-emerald {
+  --edge-c1: #10B981;
+  --edge-c2: #06D6F2;
+  --edge-c3: #2563EB;
+}
+
+/* Gentle Decorative Floating Motions */
+@keyframes apex-float-gentle {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, -8px, 0) rotate(2deg); }
+}
+
+@keyframes apex-float-counter {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, 7px, 0) rotate(-2deg); }
+}
+
+.apex-float-slow {
+  animation: apex-float-gentle 7s ease-in-out infinite;
+}
+
+.apex-float-reverse {
+  animation: apex-float-counter 8.5s ease-in-out infinite;
+}
+
+/* Subtle Icon Levitation on Card Hover */
+.apex-icon-orb {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease;
+}
+
+.group:hover .apex-icon-orb {
+  transform: translate3d(0, -3px, 12px) scale(1.05);
+}
+
+/* Staggered Scroll & Hero Entrance Reveals */
+@keyframes apex-hero-stagger-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.apex-hero-enter-1 { animation: apex-hero-stagger-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both; }
+.apex-hero-enter-2 { animation: apex-hero-stagger-in 0.62s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both; }
+.apex-hero-enter-3 { animation: apex-hero-stagger-in 0.62s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both; }
+.apex-hero-enter-4 { animation: apex-hero-stagger-in 0.62s cubic-bezier(0.16, 1, 0.3, 1) 0.30s both; }
+.apex-hero-enter-5 { animation: apex-hero-stagger-in 0.68s cubic-bezier(0.16, 1, 0.3, 1) 0.38s both; }
+
+.apex-scroll-reveal {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition:
+    opacity 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.62s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.apex-scroll-reveal.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.apex-stagger-1 { transition-delay: 60ms; }
+.apex-stagger-2 { transition-delay: 130ms; }
+.apex-stagger-3 { transition-delay: 200ms; }
+
+/* Conference Session Card Switch Entrance */
+@keyframes apex-session-card-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.apex-session-card {
+  animation: apex-session-card-in 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.24s ease;
+}
+
+.apex-session-card:hover {
+  transform: translate3d(0, -2px, 0);
+  box-shadow: 0 18px 36px -14px rgba(17, 21, 43, 0.11);
+}
+
+/* Keynote & Final CTA Surfaces */
+.apex-keynote-surface {
+  background:
+    radial-gradient(520px circle at 92% 15%, rgba(6, 214, 242, 0.11) 0%, transparent 68%),
+    radial-gradient(520px circle at 10% 88%, rgba(124, 58, 237, 0.1) 0%, transparent 68%),
+    linear-gradient(145deg, #FFFFFF 0%, #F8F6FF 55%, #F5F3FF 100%);
+  border: 1px solid rgba(124, 58, 237, 0.18);
+  box-shadow:
+    0 22px 50px -18px rgba(124, 58, 237, 0.14),
+    0 6px 18px -6px rgba(6, 214, 242, 0.08),
+    inset 0 1px 0 #FFFFFF;
+}
+
+.apex-final-cta-surface {
+  background:
+    radial-gradient(560px circle at 12% 20%, rgba(236, 0, 140, 0.11) 0%, rgba(124, 58, 237, 0.08) 45%, transparent 72%),
+    radial-gradient(560px circle at 88% 80%, rgba(6, 214, 242, 0.14) 0%, rgba(37, 99, 235, 0.09) 48%, transparent 74%),
+    linear-gradient(135deg, #FFFFFF 0%, #F5F3FF 52%, #EEF6FF 100%);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  box-shadow:
+    0 24px 56px -18px rgba(17, 21, 43, 0.11),
+    0 8px 24px -8px rgba(124, 58, 237, 0.1),
+    inset 0 1px 0 #FFFFFF;
+}
+
+/* Touch Devices: Disable Pointer-Based 3D Tilt & Parallax */
+@media (hover: none), (pointer: coarse) {
+  .apex-summit-tilt-card,
+  .apex-parallax-back,
+  .apex-parallax-front {
+    transform: none !important;
+  }
+  .apex-summit-tilt-card::after {
+    display: none !important;
+  }
+}
+
+/* Reduced Motion: Respect Accessibility Setting */
+@media (prefers-reduced-motion: reduce) {
+  .apex-hero-sweep-beam,
+  .apex-summit-gradient-title,
+  .apex-summit-event-badge::before,
+  .apex-summit-tilt-card::before,
+  .apex-float-slow,
+  .apex-float-reverse,
+  .apex-hero-enter-1,
+  .apex-hero-enter-2,
+  .apex-hero-enter-3,
+  .apex-hero-enter-4,
+  .apex-hero-enter-5,
+  .apex-session-card {
+    animation: none !important;
+  }
+  .apex-scroll-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .apex-summit-tilt-card,
+  .apex-parallax-back,
+  .apex-parallax-front,
+  .apex-summit-cta-primary,
+  .apex-summit-btn-midnight,
+  .apex-summit-btn-lavender {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+
+

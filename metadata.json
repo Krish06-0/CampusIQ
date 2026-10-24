@@ -1,0 +1,6 @@
+{
+  "name": "SkillGap AI",
+  "description": "AI-Powered Placement Skill Gap Analyzer & Career Intelligence Platform. Know Your Gap. Build Your Skills. Get Placement Ready.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
